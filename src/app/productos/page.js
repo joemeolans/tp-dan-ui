@@ -14,14 +14,21 @@ export default function Productos() {
     console.log(lista);
     // Simulate a search by filtering some dummy data
     const dummyData = [
-      { id: 1, name: 'Product 1' },
-      { id: 2, name: 'Product 2' },
+      { numeroPedido: 1, estado: 'Product 1' , cliente: 'Client 1', total: 100},
+      { numeroPedido: 2, estado: 'Product 2' , cliente: 'Client 2', total: 200},
+      { numeroPedido: 3, estado: 'Product 3' , cliente: 'Client 3', total: 300},
+      { numeroPedido: 4, estado: 'Product 4' , cliente: 'Client 4', total: 400},
+      { numeroPedido: 5, estado: 'Product 5' , cliente: 'Client 5', total: 500},
+      { numeroPedido: 6, estado: 'Product 6' , cliente: 'Client 6', total: 600},
     ];
-    setResults(dummyData.filter(product => product.name.includes(searchTerm) || product.id.toString() === searchTerm));
+    setResults(dummyData);
   };
 
   return (
     <>
+      <a href='/'>
+        Volver atras
+      </a>
       <h1>Productos Page</h1>
       <input 
         type="text" 
@@ -36,17 +43,22 @@ export default function Productos() {
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Nombre</th>
+            <th>Numero Pedido</th>
+            <th>Estado</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {results.map(product => (
-            <tr key={product.id}>
+            <tr key={product.numeroPedido}>
               <td>
                 <Link href={`/productos/${product.id}`}>{product.id}</Link>
               </td>
-              <td>{product.name}</td>
+              <td>{product.estado}</td>
+              <td>{product.cliente}</td>
+              <td>{product.total}</td>
             </tr>
           ))}
         </tbody>

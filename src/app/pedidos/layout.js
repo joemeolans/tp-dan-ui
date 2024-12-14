@@ -1,8 +1,11 @@
-import Sidebar from './Sidebar';
+'use client';
 
-const Layout = ({ children }) => {
+import Sidebar from "@/components/Sidebar";
+import styles from "./page.module.css";
+
+export default function PedidoLayout({ children }) {
   return (
-    <div>
+    <div className={styles.main}>
       <div className="container">
         <Sidebar />
         <main>{children}</main>
@@ -18,6 +21,4 @@ const Layout = ({ children }) => {
       `}</style>
     </div>
   );
-};
-
-export default Layout;
+}

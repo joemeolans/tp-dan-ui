@@ -6,7 +6,7 @@ const Sidebar = () => {
         <style jsx>{`
           aside {
             width: 200px;
-            background: #f4f4f4;
+            background:rgb(20, 92, 165);
             padding: 20px;
           }
         `}</style>
