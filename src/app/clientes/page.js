@@ -1,15 +1,11 @@
 'use client';
+/*
 import { useState, useEffect } from 'react';
-
-
 import { getAllClientes, getClientesByFilters } from "@/lib/clientes-api";
 import StickyTable from '@/components/StickyTable';
 import FiltroBusqueda from './components/FiltrosCliente';
 import HomeIcon from '@mui/icons-material/Home';
 import Button from '@mui/material/Button';
-
-
-
 
 export default function Clientes() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,7 +43,7 @@ export default function Clientes() {
     return { cuit, nombre, correoElectronico, maximoDescubierto, cantObrasDisponibles};
   }
 
-  /*
+  
   useEffect(() => {
     const fetchAllClientes = async () => {
       try {
@@ -60,7 +56,7 @@ export default function Clientes() {
     createRows();
     fetchAllClientes();
   }, []);
-  */
+  
   
   const handleSearch = async () => {
     const lista = await getClientesByFilters();
@@ -104,3 +100,75 @@ export default function Clientes() {
     </>
   );
 };
+*/
+
+
+import { useState, useEffect } from 'react';
+import { getClientesByFilters } from "@/lib/clientes-api";
+import StickyTable from '@/components/StickyTable';
+import FiltroBusqueda from './components/FiltrosCliente';
+import HomeIcon from '@mui/icons-material/Home';
+import Button from '@mui/material/Button';
+
+export default function Clientes() {
+    const [filters, setFilters] = useState({ cuit: '', nombre: '' });
+    const [results, setResults] = useState([]);
+
+    const columns = [
+        { id: 'cuit', label: 'CUIT', minWidth: 170 },
+        { id: 'nombre', label: 'Nombre', minWidth: 100 },
+        { id: 'correoElectronico', label: 'E-Mail', minWidth: 170, align: 'right' },
+        { id: 'maximoDescubierto', label: 'Max. Desc.', minWidth: 170, align: 'right' },
+        { id: 'cantObrasDisponibles', label: 'Obras Disp.', minWidth: 170, align: 'right' },
+    ];
+
+    const fetchClientes = async (appliedFilters) => {
+        try {
+            const lista = await getClientesByFilters(appliedFilters);
+            setResults(lista);
+        } catch (error) {
+            console.error("Error al obtener los clientes:", error);
+        }
+    };
+
+    const handleSearch = (appliedFilters) => {
+        setFilters(appliedFilters); // Actualiza los filtros
+        fetchClientes(appliedFilters); // Llama al backend
+    };
+
+    const rows = results.map(cliente => ({
+        cuit: cliente.cuit,
+        nombre: cliente.nombre,
+        correoElectronico: cliente.correoElectronico,
+        maximoDescubierto: cliente.maximoDescubierto,
+        cantObrasDisponibles: cliente.cantObrasDisponibles,
+    }));
+
+    return (
+        <>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+                <h1 style={{
+                    fontFamily: 'Arial',
+                    color: '#04265b'
+                }}>Módulo de Clientes</h1>
+                <Button variant="contained" endIcon={<HomeIcon />}>
+                    Volver al menú principal
+                </Button>
+            </div>
+            <hr style={{ border: 'none', height: '3px', backgroundColor: '#04265b', marginBottom: '10px' }}></hr>
+            <FiltroBusqueda onSearch={handleSearch} />
+            <div style={{
+                display: 'grid',
+                justifyContent: 'normal',
+                alignItems: 'center',
+                backgroundColor: '#eafafa',
+                width: '100%',
+                marginTop: '20px',
+                padding: '20px',
+                borderRadius: '10px'
+            }}>
+                <StickyTable rows={rows} columns={columns} />
+            </div>
+        </>
+    );
+}

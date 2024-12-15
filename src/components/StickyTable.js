@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,12 +13,18 @@ import Box from '@mui/material/Box';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ModalNuevoCliente from '@/app/clientes/components/ModalNuevoCliente';
+import ModalModificarCliente from '@/app/clientes/components/ModalModificarCliente';
+import ModalEliminar from './ModalEliminar';
 
 
-export default function StickyTable({ rows, columns, onEdit, onDelete, onAdd }) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selectedRows, setSelectedRows] = React.useState([]);
+export default function StickyTable({ rows, columns, onDelete }) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [openModalNuevo, setOpenModalNuevo] = useState(false);
+  const [openModalModificar, setOpenModalModificar] = useState(false);
+  const [openModalEliminar, setOpenModalEliminar] = useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -30,13 +37,19 @@ export default function StickyTable({ rows, columns, onEdit, onDelete, onAdd }) 
 
   const handleRowClick = (row) => {
     setSelectedRows((prev) => {
-      // Si la fila ya está seleccionada, la eliminamos
       if (prev.some((selected) => selected.cuit === row.cuit)) {
         return prev.filter((selected) => selected.cuit !== row.cuit);
       }
       return [...prev, row];
     });
   };
+
+  const handleOpenModalNuevo = () => setOpenModalNuevo(true);
+  const handleCloseModalNuevo = () => setOpenModalNuevo(false);
+  const handleOpenModalModificar = () => setOpenModalModificar(true);
+  const handleCloseModalModificar = () => setOpenModalModificar(false);
+  const handleOpenModalEliminar = () => setOpenModalEliminar(true);
+  const handleCloseModalEliminar = () => setOpenModalEliminar(false);
 
   return (
     <>
@@ -52,7 +65,7 @@ export default function StickyTable({ rows, columns, onEdit, onDelete, onAdd }) 
           <Button
             variant="contained"
             endIcon={<EditIcon />}
-            onClick={() => onEdit(selectedRows[0])}
+            onClick={handleOpenModalModificar}
             disabled={selectedRows.length !== 1}
           >
             Modificar cliente
@@ -61,22 +74,21 @@ export default function StickyTable({ rows, columns, onEdit, onDelete, onAdd }) 
             variant="contained"
             color="error"
             endIcon={<DeleteIcon />}
-            onClick={() => onDelete(selectedRows)}
+            onClick={handleOpenModalEliminar}
             disabled={selectedRows.length === 0}
           >
             Eliminar cliente/s
           </Button>
         </Box>
-
-        {/* Botón de agregar */}
-        <Button
-          variant="contained"
-          endIcon={<PersonAddIcon />}
-          onClick={onAdd}
-        >
+        <Button variant="contained" endIcon={<PersonAddIcon />} onClick={handleOpenModalNuevo}>
           Agregar nuevo cliente
         </Button>
       </Box>
+
+      {/* Modal */}
+      <ModalNuevoCliente open={openModalNuevo} onClose={handleCloseModalNuevo} />
+      <ModalModificarCliente open={openModalModificar} onClose={handleCloseModalModificar} data={selectedRows.at(0)}/>
+      <ModalEliminar open={openModalEliminar} onClose={handleCloseModalEliminar}  />
 
       {/* Tabla */}
       <Paper
@@ -119,7 +131,9 @@ export default function StickyTable({ rows, columns, onEdit, onDelete, onAdd }) 
                       selected={isSelected}
                       sx={{
                         cursor: 'pointer',
-                        backgroundColor: isSelected ? '#81BFDA !important' : 'inherit',
+                        backgroundColor: isSelected
+                          ? '#81BFDA !important'
+                          : 'inherit',
                       }}
                     >
                       {columns.map((column) => {
