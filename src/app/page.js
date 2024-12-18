@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <div>
-      <h1>Gestion de Pedidos DAN</h1>
+      <h1 style={{color: "white", textAlign: "center !important"}}>Gestion de Pedidos DAN</h1>
       <Link href="/clientes">
         <button className={styles.botones}>Go to Clientes</button>
       </Link>

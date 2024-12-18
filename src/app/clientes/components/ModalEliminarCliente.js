@@ -6,7 +6,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
-import { useState } from 'react';
 
 const style = {
   position: 'absolute',
@@ -21,7 +20,7 @@ const style = {
   p: 4,
 };
 
-export default function ModalEliminar({ open, onClose, onConfirm, entityName }) {
+export default function ModalEliminar({ open, onClose, handleDelete}) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -29,9 +28,9 @@ export default function ModalEliminar({ open, onClose, onConfirm, entityName }) 
     try {
       setIsLoading(true);
       setError(null);
-      await onConfirm(); // Llama a la función pasada como prop
+      await handleDelete();
       setIsLoading(false);
-      onClose(); // Cierra el modal después de la confirmación
+      onClose();
     } catch (err) {
       setIsLoading(false);
       setError(err.message || 'Error al eliminar el registro.');
@@ -47,7 +46,7 @@ export default function ModalEliminar({ open, onClose, onConfirm, entityName }) 
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Eliminar {entityName}
+          Eliminar cliente/s
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           ¿Estás seguro que deseas eliminar este/estos registros seleccionados?
