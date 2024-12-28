@@ -17,7 +17,7 @@ import ModalNuevoCliente from '@/app/clientes/components/ModalNuevoCliente';
 import ModalModificarCliente from '@/app/clientes/components/ModalModificarCliente';
 import ModalEliminar from './ModalEliminar';
 
-export default function StickyTable({ rows, columns, loading, selectedIds, setSelectedIds, handleDelete }) {
+export default function StickyTable({ rows, columns, loading, entityName }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -50,12 +50,14 @@ export default function StickyTable({ rows, columns, loading, selectedIds, setSe
   const handleOpenModalEliminar = () => setOpenModalEliminar(true);
   const handleCloseModalEliminar = () => setOpenModalEliminar(false);
 
-
+  // Extraemos los ids de las filas seleccionadas
+  const selectedIds = selectedRows.map(row => row.id); // Ajusta `id` según tu estructura
+  
   if (loading) {
     return (
       <div style={{ height: '300px', width: '100%' }}>
-                {/* La carga se manejará en el componente padre */}
-            </div>
+        {/* La carga se manejará en el componente padre */}
+      </div>
     );
   }
 
@@ -84,6 +86,7 @@ export default function StickyTable({ rows, columns, loading, selectedIds, setSe
             endIcon={<DeleteIcon />}
             onClick={handleOpenModalEliminar}
             disabled={selectedRows.length === 0}
+
           >
             Eliminar cliente/s
           </Button>
@@ -95,13 +98,13 @@ export default function StickyTable({ rows, columns, loading, selectedIds, setSe
 
       {/* Modal */}
       <ModalNuevoCliente open={openModalNuevo} onClose={handleCloseModalNuevo} />
-      <ModalModificarCliente open={openModalModificar} onClose={handleCloseModalModificar} data={selectedRows.at(0)}/>
-      <ModalEliminar open={openModalEliminar} 
-                      onClose={handleCloseModalEliminar} 
-                      data={selectedRows} 
-                      handleDelete={handleDelete} 
-                      ids={selectedIds} 
-                      setIds ={setSelectedIds}/>
+      <ModalModificarCliente open={openModalModificar} onClose={handleCloseModalModificar} data={selectedRows.at(0)} />
+      <ModalEliminar
+        open={openModalEliminar}
+        onClose={handleCloseModalEliminar}
+        ids={selectedIds}
+        entityName={entityName}
+      />
 
       {/* Tabla */}
       <Paper

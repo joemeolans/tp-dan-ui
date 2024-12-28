@@ -48,8 +48,19 @@ export async function getClientesByFilters(queryValue = {}, limit = 10, offset =
 }
 
 export const deleteCliente = async (id) => {
-  const response = await fetch(`http://localhost/clientes/api/${id}`, { method: 'DELETE' });
-  if (!response.ok) {
-      throw new Error('Error al eliminar el cliente.');
+  const apiUrl = `http://localhost/clientes/api/clientes/${id}`;
+  console.log('Eliminando cliente con URL:', apiUrl);
+
+  try {
+    const response = await fetch(apiUrl, { method: 'DELETE' });
+    console.log('Respuesta recibida:', response);
+    if (!response.ok) {
+      throw new Error(`Error al eliminar el cliente. Estado HTTP: ${response.status}`);
+    }
+    console.log(`Cliente con id ${id} eliminado correctamente.`);
+  } catch (error) {
+    console.error("Error al eliminar el cliente:", error);
+    throw error; // Propagar el error para manejarlo en el nivel superior si es necesario
   }
 };
+

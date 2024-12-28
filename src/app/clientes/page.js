@@ -15,6 +15,8 @@ export default function Clientes() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const entityName = 'clientes';
+
     const columns = [
         { id: 'cuit', label: 'CUIT', minWidth: 170 },
         { id: 'nombre', label: 'Nombre', minWidth: 100 },
@@ -47,7 +49,7 @@ export default function Clientes() {
           console.error('Error al eliminar clientes:', error);
           throw error; 
       }
-  };
+    };
   
     
     useEffect(() => {
@@ -73,6 +75,7 @@ export default function Clientes() {
     };
 
     const rows = results.map(cliente => ({
+        id: cliente.id,
         cuit: cliente.cuit,
         nombre: cliente.nombre,
         correoElectronico: cliente.correoElectronico,
@@ -129,9 +132,7 @@ export default function Clientes() {
                         rows={rows} 
                         columns={columns} 
                         loading={isLoading} 
-                        selectedIds={selectedIds} 
-                        setSelectedIds={setSelectedIds}
-                        handleDelete={handleDelete}
+                        entityName={entityName}
                     />
                 )}
 

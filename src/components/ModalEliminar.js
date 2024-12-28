@@ -21,7 +21,7 @@ const style = {
   p: 4,
 };
 
-export default function ModalEliminar({ open, onClose, onConfirm, entityName }) {
+export default function ModalEliminar({ open, onClose, ids, entityName }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -29,12 +29,31 @@ export default function ModalEliminar({ open, onClose, onConfirm, entityName }) 
     try {
       setIsLoading(true);
       setError(null);
-      await onConfirm(); // Llama a la función pasada como prop
+      
+      // Realiza las solicitudes DELETE para cada ID
+      for (const id of ids) {
+        
+        
+        const url = `http://localhost/${entityName}/api/${entityName}/${id}`;
+        const response = await fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error al eliminar el registro con ID: ${id}`);
+        }
+        
+      }
+
       setIsLoading(false);
       onClose(); // Cierra el modal después de la confirmación
     } catch (err) {
       setIsLoading(false);
-      setError(err.message || 'Error al eliminar el registro.');
+      setError(err.message || 'Error al eliminar los registros.');
     }
   };
 
