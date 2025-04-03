@@ -51,7 +51,7 @@ export default function StickyTable({ rows, columns, loading, entityName }) {
   const handleCloseModalEliminar = () => setOpenModalEliminar(false);
 
   // Extraemos los ids de las filas seleccionadas
-  const selectedIds = selectedRows.map(row => row.id); // Ajusta `id` según tu estructura
+  const selectedIds = selectedRows.map(row => row.id);
   
   if (loading) {
     return (

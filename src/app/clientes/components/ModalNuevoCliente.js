@@ -22,6 +22,24 @@ const style = {
 };
 
 export default function ModalNuevoCliente({ open, onClose }) {
+
+  const handleGuardar = async () => {
+    const clienteData = {
+      cuit: document.getElementById('filterCuit').value,
+      nombre: document.getElementById('filterNombre').value,
+      correoElectronico: document.getElementById('filterCorreoElectronico').value,
+      maximoDescubierto: document.getElementById('filterMaximoDescubierto').value,
+      cantObrasDisponibles: document.getElementById('filterCantMaxObras').value,
+    };
+  
+    try {
+      await addCliente(clienteData);
+      onClose();
+    } catch (error) {
+      console.error('Error al agregar el cliente:', error);
+    }
+  };
+  
   return (
     <Modal
       open={open}
@@ -42,7 +60,7 @@ export default function ModalNuevoCliente({ open, onClose }) {
             <TextField required id="filterCantMaxObras" label="Cant. maxima de obras" variant="outlined" size="small" />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button  sx={{ mt: 2 }} variant="contained" endIcon={<SaveIcon />}>
+            <Button  sx={{ mt: 2 }} variant="contained" endIcon={<SaveIcon />} onClick={handleGuardar}>
                 Guardar
             </Button>
             <Button onClick={onClose} sx={{ mt: 2 }} variant="contained" endIcon={<CloseIcon />}>

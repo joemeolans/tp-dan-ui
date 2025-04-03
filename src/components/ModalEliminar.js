@@ -50,7 +50,7 @@ export default function ModalEliminar({ open, onClose, ids, entityName }) {
       }
 
       setIsLoading(false);
-      onClose(); // Cierra el modal después de la confirmación
+      onClose();
     } catch (err) {
       setIsLoading(false);
       setError(err.message || 'Error al eliminar los registros.');
